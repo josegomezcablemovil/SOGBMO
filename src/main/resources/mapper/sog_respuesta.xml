@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?> 
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mapper.sog_respuesta">
+    <select id="selectRespuesta" parameterType="org.sog.persistence.entities.EBRespuesta"
+            resultType="org.sog.persistence.entities.EBRespuesta">
+        SELECT * FROM sog_respuesta
+        <where>
+            <if test="id_respuesta != 0">
+                and id_respuesta = #{id_respuesta}
+            </if>
+            <if test="idUsuarioCreacion != 0">
+                and idUsuarioCreacion = #{idUsuarioCreacion}
+            </if>                
+            <if test="idSolicitud != 0">
+                and idSolicitud=#{idSolicitud}
+            </if>
+        </where>
+    </select>
+    
+    <insert id="createRespuesta" useGeneratedKeys="true" keyProperty="id_respuesta" keyColumn="id_respuesta"
+            parameterType="org.sog.persistence.entities.EBRespuesta">
+        insert into sog_respuesta
+        (id_respuesta, fechaCreacion, idUsuarioCreacion, valor, esRespuestaOperador, visto, idSolicitud)
+        values
+        (#{id_respuesta},#{fechaCreacion},#{idUsuarioCreacion},#{valor}, #{esRespuestaOperador}, #{visto}, #{idSolicitud})
+    </insert>
+    
+    <update id="editVistoRespueta" parameterType="org.sog.persistence.entities.EBRespuesta">
+        UPDATE sog_respuesta SET 
+        visto = #{visto}
+        WHERE id_respuesta =  #{id_respuesta}  
+    </update>
+    
+</mapper>

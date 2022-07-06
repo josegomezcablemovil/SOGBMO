@@ -1,0 +1,32 @@
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+    <p:dialog widgetVar="dlg3"
+              modal="true"
+              resizable="false"
+              closable="false">
+        <h:form id="formAttachedRequest">
+
+            <center>
+                <p:graphicImage name="main/images/adjuntar.svg" width="15%" height="15%"/>
+                <br/>
+                <h:outputText value="¿Estás seguro?"  style="font-size: 20px; font-weight: bold;"/>
+                <p:separator style="width:20%;" />
+                <h:outputText value="#{gestionarSolicitud.objConfig.mensajeConfirmacionAdjunto}" 
+                              style="font-size: 14px; font-weight: bold; color: #5d5d5d;"/> 
+                <br/>
+                <p:commandButton value="Solicitar" 
+                                 icon="fa fa-fw fa-check"
+                                 update="principalForm:tbl"
+                                 actionListener="#{gestionarSolicitud.enviarSolicitudAdjunto()}"
+                                 style="margin: 20px 0 20px 0;"/>
+                <p:commandButton value="Cancelar"
+                                 icon="fa fa-fw fa-close"
+                                 update=""
+                                 actionListener="#{gestionarSolicitud.cerrarDialogo('dlg3')}"
+                                 style="margin: 20px 0 20px 0; background-color: #bd2828; border: 1px solid #bd2828;" />
+            </center>
+        </h:form>
+    </p:dialog>
+</ui:composition>

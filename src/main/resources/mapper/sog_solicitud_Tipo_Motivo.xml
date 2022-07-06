@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?> 
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mapper.sog_solicitud_Tipo_Motivo">
+    <select id="selectMenuTipoMotivo" parameterType="org.sog.persistence.entities.EBTipoMotivoSolicitud"
+            resultType="org.sog.persistence.entities.EBTipoMotivoSolicitud">
+        SELECT t.id_tipo AS idTipo,
+        t.nombre AS nombreTipoSolicitud,
+        m.id_motivo AS idMotivo,
+        m.nombre AS nombreMotivoSolicitud,
+        m.prioridad AS prioridadMotivo
+        FROM sog_tipo_motivo tm
+        INNER JOIN sog_tiposolicitud t ON tm.idTipo = t.id_tipo
+        INNER JOIN sog_motivosolicitud m ON tm.idMotivo = m.id_motivo
+        <where>
+            <if test="idTipo != 0">
+                AND tm.idTipo = #{idTipo}
+            </if>
+        </where>
+        AND t.estado = 1
+        AND m.estado = 1
+        AND tm.estado = 1
+    </select>
+
+</mapper>

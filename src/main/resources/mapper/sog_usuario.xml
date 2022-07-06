@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?> 
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mapper.sog_usuario">
+    <select id="selectUsuario" parameterType="org.sog.persistence.entities.EBUsuario"
+            resultType="org.sog.persistence.entities.EBUsuario">
+        SELECT * FROM sog_admon_usuarios 
+        WHERE username = #{username}
+        AND password = #{password}
+    </select>
+    
+    <select id="selectUsuariosFind" parameterType="org.sog.persistence.entities.EBUsuario"
+            resultType="org.sog.persistence.entities.EBUsuario">
+        SELECT * FROM sog_usuarios 
+    </select>
+
+    <select id="selectUsuariosFindMovil" parameterType="org.sog.persistence.entities.EBUsuarioMovil"
+            resultType="org.sog.persistence.entities.EBUsuarioMovil">
+        SELECT * FROM sog_admon_usuarios 
+    </select>
+
+    <select id="selectUsuariosInactive" parameterType="org.sog.persistence.entities.EBUsuario"
+            resultType="org.sog.persistence.entities.EBUsuario">
+        SELECT * FROM sog_admon_usuarios WHERE estado = 0;    
+    </select> 
+    
+    <insert id="createUser" useGeneratedKeys="true" keyProperty="id_usuarios" keyColumn="id_usuarios"
+            parameterType="org.sog.persistence.entities.EBUsuario">
+        insert into sog_admon_usuarios
+        (idsog_admon_usuarios, username, password, rol, email, estado, nombres, usuario_creacion, fecha_creacion)
+        values
+        (#{idsog_admon_usuarios}, #{username}, #{password}, #{rol}, #{email}, #{estado}, #{nombres}, #{usuario_creacion}, #{fecha_creacion})
+    </insert>
+
+    <update id="editStatusUser" parameterType="org.sog.persistence.entities.EBUsuario">
+        UPDATE sog_admon_usuarios SET 
+        estado = #{estado},
+        usuario_modificacion = #{usuario_modificacion},
+        fecha_modificacion = #{fecha_modificacion}
+        WHERE idsog_admon_usuarios = #{idsog_admon_usuarios}  
+    </update>
+    
+    <update id="editPassUser" parameterType="org.sog.persistence.entities.EBUsuario">
+        UPDATE sog_admon_usuarios SET 
+        password = #{password},
+        usuario_modificacion = #{usuario_modificacion},
+        fecha_modificacion = #{fecha_modificacion}
+        WHERE idsog_admon_usuarios = #{idsog_admon_usuarios}  
+    </update>
+    
+    <update id="editPassUserMovil" parameterType="org.sog.persistence.entities.EBUsuario">
+        UPDATE sog_usuarios SET 
+        password = #{password},
+        usuario_modificacion = #{usuario_modificacion},
+        fecha_modificacion = #{fecha_modificacion}
+        WHERE id_usuarios = #{id_usuarios}  
+    </update>
+                                                       
+    <update id="editIngresoLogin" parameterType="org.sog.persistence.entities.EBUsuario">
+        UPDATE sog_admon_usuarios SET 
+        ultimoIngreso = #{ultimoIngreso}
+        WHERE idsog_admon_usuarios = #{idsog_admon_usuarios}  
+    </update>
+</mapper>

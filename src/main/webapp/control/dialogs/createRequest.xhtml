@@ -1,0 +1,142 @@
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+    <p:dialog id="dlg1"
+              widgetVar="dlg1" 
+              closable="false"
+              modal="true"
+              draggable="false"
+              responsive="true">
+        <h:form id="formCreateRequest" >
+            <div class="ui-fluid">
+                    <p:messages id="messages" showDetail="true" closable="true"/>
+                <br/>
+                <h:panelGrid columns="6">
+                    <i class="fa fa-fw fa-inbox"/>
+                    <h:outputText value="Tipo:"
+                                  style="font-weight: bold;" />
+                    <p:selectOneMenu value="#{gestionarSolicitud.objSolicitud.idTipoSolicitud}">
+                        <f:selectItem itemLabel="Seleccionar"
+                                      itemValue="" />
+                        <f:selectItems value="#{gestionarSolicitud.listaTipoSolicitud}" 
+                                       var="var" 
+                                       itemValue="#{var.id_tipo}" 
+                                       itemLabel="#{var.nombre}" />
+                        <p:ajax update="createMotivoSolicitud pnlDates pnlHours" 
+                                listener="#{gestionarSolicitud.motivoSolicitud()}" />
+                    </p:selectOneMenu> 
+                    <i class="fa fa-fw fa-th-list"/>
+                    <h:outputText value="Motivo:" 
+                                  style="font-weight: bold;" />
+                    <p:selectOneMenu id="createMotivoSolicitud" 
+                                     value="#{gestionarSolicitud.objSolicitud.idMotivoSolicitud}">
+                        <f:selectItem itemLabel="Seleccionar" 
+                                      itemValue="" />
+                        <f:selectItems value="#{gestionarSolicitud.listaMotivos}" 
+                                       var="varM" 
+                                       itemValue="#{varM.id_motivo}" 
+                                       itemLabel="#{varM.nombre}" /> 
+                    </p:selectOneMenu>
+                </h:panelGrid>
+                <p:separator/>
+                <h:panelGrid id="pnlDates" 
+                             columns="5">
+                    <i class="fa fa-fw fa-calendar"/>
+                    <h:outputText value="Fecha Solicitud:"  
+                                  style="font-weight: bold;"/> 
+                    <p:datePicker locale="es"
+                                  rendered="#{gestionarSolicitud.objRegla.multiselect}"
+                                  mindate="#{gestionarSolicitud.objConfig.fechaIncial.time}"
+                                  maxdate="#{gestionarSolicitud.objConfig.fechaFinal.time}"
+                                  value="#{gestionarSolicitud.listFechasSolicutud}"
+                                  selectionMode="multiple"
+                                  readonlyInput="true" />
+
+                    <p:calendar locale="es" 
+                                showOn="button"
+                                rendered="#{!gestionarSolicitud.objRegla.multiselect}"
+                                mindate="#{gestionarSolicitud.objConfig.fechaIncial.time}"
+                                maxdate="#{gestionarSolicitud.objConfig.fechaFinal.time}"
+                                value="#{gestionarSolicitud.objSolicitud.fechaSolicitud}">
+                    </p:calendar>
+                </h:panelGrid>
+
+                <h:panelGrid id="pnlHours" 
+                             columns="4">
+                    <h:outputText value="Hora Inicio:" 
+                                  style="font-weight: bold;" 
+                                  rendered="#{gestionarSolicitud.objRegla.aplicaHoraInicio}" />
+
+                    <p:datePicker value="#{gestionarSolicitud.objSolicitud.horaInicio}"
+                                  rendered="#{gestionarSolicitud.objRegla.aplicaHoraInicio}"
+                                  locale="es"
+                                  timeOnly="true"
+                                  pattern="HH:mm">
+                        <p:ajax event="change" 
+                                global="false" />
+                    </p:datePicker>
+                    <h:outputText value="Hora Final:" 
+                                  style="font-weight: bold;" 
+                                  rendered="#{gestionarSolicitud.objRegla.aplicaHoraFinal}" />
+
+                    <p:datePicker value="#{gestionarSolicitud.objSolicitud.horaFinal}"
+                                  rendered="#{gestionarSolicitud.objRegla.aplicaHoraFinal}"
+                                  locale="es"
+                                  timeOnly="true"
+                                  pattern="HH:mm">
+                        <p:ajax event="change" 
+                                global="false" />
+                    </p:datePicker>
+                </h:panelGrid>
+                <p:separator style="margin-top: 10px;"/>
+                <h:panelGrid id="pnlEmpleados" 
+                             columns="6">
+
+                    <i class="fa fa-fw fa-child"/>
+                    <h:outputText value="Operador:" 
+                                  style="font-weight: bold;" />
+                    <p:selectOneMenu value="#{gestionarSolicitud.objSolicitud.idOperador}" 
+                                     filter="true" style="width:125px;text-transform: capitalize;">
+                        <f:selectItem itemLabel="Seleccionar" 
+                                      itemValue="" />
+                        <f:selectItems value="#{gestionarSolicitud.listEmpleados}" 
+                                       var="varE" 
+                                       itemLabel="#{varE.codigoTM} - #{varE.nombres} #{varE.apellidos}" 
+                                       itemValue="#{varE.id_empleado}" /> 
+                    </p:selectOneMenu>
+                    <i class="fa fa-fw fa-map-marker"/>
+                    <h:outputText value="Romper Zona:" 
+                                  style="font-weight: bold;" />
+                    <p:toggleSwitch value="#{gestionarSolicitud.objSolicitud.romperZona}"/>
+                </h:panelGrid>
+                <p:separator style="margin-top: 10px;"/>
+                <h:panelGrid columns="2">
+                    <i class="fa fa-fw fa-pencil"/>
+                    <h:outputText value="Observaciones:" 
+                                  style="font-weight: bold;" />
+                </h:panelGrid>
+                <center>
+                    <p:inputTextarea value="#{gestionarSolicitud.objSolicitud.observaciones}"
+                                     maxlength="250"
+                                     autoResize="true"
+                                     style="margin-top: 10px" 
+                                     rows="10"
+                                     cols="60"
+                                     placeholder="Agregar observaciones de la solicitud."/>
+                    <br/>
+                    <p:commandButton
+                        value="Crear" 
+                        update="formCreateRequest principalForm"
+                        icon="fa fa-fw fa-check"
+                        action="#{gestionarSolicitud.crearSolicitud()}"/>
+                    <p:commandButton value="Cancelar"
+                                     icon="fa fa-fw fa-close"
+                                     update="@form"
+                                     actionListener="#{gestionarSolicitud.cerrarDialogo('dlg1')}"
+                                     style="margin-top: 20px; background-color: #bd2828; border: 1px solid #bd2828;" />
+                </center>
+            </div>
+        </h:form>
+    </p:dialog>
+</ui:composition>

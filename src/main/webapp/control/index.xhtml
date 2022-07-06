@@ -1,0 +1,342 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+                template="/WEB-INF/template.xhtml">
+    <ui:define name="implementation">
+        <h:form id="principalForm">
+
+            <p:growl id="growl" showDetail="true" sticky="true"/>
+            <p:toolbar>
+                <f:facet name="right">
+                    <h:outputText/>
+                    <br/>
+
+                    <p:commandButton icon="fa fa-fw fa-spinner"
+                                     value="Gestionar"
+                                     title="Gestionar"
+                                     update="principalForm:tbl growl"
+                                     actionListener="#{gestionarSolicitud.gestionarMultiple()}"
+                                     style="margin-top: 20px;">
+                    </p:commandButton>
+
+                    <p:commandButton icon="fa fa-fw fa-check"
+                                     value="Aceptar"
+                                     title="Aceptar"
+                                     update="principalForm:tbl growl"
+                                     actionListener="#{gestionarSolicitud.aceptarMultiple()}"
+                                     style="margin-top: 20px;">
+                    </p:commandButton>
+
+                    <p:commandButton icon="fa fa-fw fa-close"
+                                     value="Rechazar"
+                                     title="Rechazar"
+                                     update="principalForm:tbl growl"
+                                     actionListener="#{gestionarSolicitud.rechazarMultiple()}"
+                                     style="margin-top: 20px;">
+                    </p:commandButton>
+
+                    <p:commandButton icon="fa fa-fw fa-cloud-download"
+                                     value="Descargar Archivo Freeway"
+                                     title="Descargar Archivo Freeway"
+                                     update="pnl7"
+                                     actionListener="#{gestionarSolicitud.reporteFreeway('dlg7')}"
+                                     style="margin-top: 20px;">
+                    </p:commandButton>
+                    <p:commandButton id="toggler" type="button" icon="fa fa-sliders" />
+                    <p:columnToggler datasource="tbl" trigger="toggler" /> 
+
+                </f:facet>
+
+            </p:toolbar>
+            <p:dataTable id="tbl" 
+                         var="solicitud" 
+                         value="#{gestionarSolicitud.listMaestro}" 
+                         widgetVar="solicitudTable"
+                         editable="true"
+                         editMode="cell"
+                         rowKey="#{solicitud.id_solicitud}"
+                         reflow="true"
+                         paginator="true"
+                         rows="80"
+                         rowsPerPageTemplate="20,40,80"
+                         style="margin-bottom: 50px;"
+                         selection="#{gestionarSolicitud.selectedMaestros}"
+                         emptyMessage="No se encuentran registros">
+
+
+                <p:column selectionMode="multiple" style="width:16px;text-align:center"/>
+
+                <p:column style="width:16px" priority="4">
+                    <p:rowToggler />
+                </p:column>
+                <p:rowExpansion>
+                    <p:column>
+                        <h:outputText style="font-weight: bold" value="Descripción Solicitud:" />
+                        <br/>
+                        <i class="fa fa-fw fa-tag"/>
+                        <h:outputText value="#{solicitud.observaciones}" />
+                        <br/>
+                        <h:outputText style="font-weight: bold" value="Patios Homologados Operador:" />
+                        <br/>
+                        <i class="fa fa-fw fa-map-marker"/>
+                        <h:outputText value="#{solicitud.nombrePatioInicio} - #{solicitud.nombrePatioAlterno}" />
+                        <br/>
+                        <h:outputText style="font-weight: bold" value="Acepta Romper Zona: " />
+                        <br/>
+                        <i class="fa fa-fw fa-gears"/>
+                        <h:outputText value=" #{solicitud.romperZona == true ? 'Si' : 'No'} "/>
+
+                    </p:column>
+
+                </p:rowExpansion>
+
+                <p:column filterBy="#{solicitud.codigoTM}"
+                          headerText="Código TM" 
+                          styleClass="#{solicitud.idEstado eq '1' ? 'gestion' : null or solicitud.idEstado eq '2' ? 'aprobado' : null or solicitud.idEstado eq '3' ? 'rechazado' : null or solicitud.idEstado eq '5' ? 'eliminado' : null}"
+                          filterMatchMode="contains">
+                    <h:outputText value="#{solicitud.codigoTM != null ? solicitud.codigoTM : 'No Aplica'}" style="font-weight: bold;"/>
+                </p:column>
+                <p:column filterBy="#{solicitud.guid}"
+                          styleClass="#{solicitud.idEstado eq '1' ? 'gestion' : null or solicitud.idEstado eq '2' ? 'aprobado' : null or solicitud.idEstado eq '3' ? 'rechazado' : null or solicitud.idEstado eq '5' ? 'eliminado' : null}"
+                          headerText="Código de solicitud" 
+                          filterMatchMode="contains">
+                    <h:outputText value="#{solicitud.guid != null ? solicitud.guid : 'No Aplica'}" style="font-weight: bold;"/>
+                </p:column>
+
+
+                <p:column headerText="Fecha Solicitud" sortBy="#{solicitud.fechaSolicitud}" filterBy="#{solicitud.fechaSolicitud}" 
+                          styleClass="#{solicitud.idEstado eq '1' ? 'gestion' : null or solicitud.idEstado eq '2' ? 'aprobado' : null or solicitud.idEstado eq '3' ? 'rechazado' : null or solicitud.idEstado eq '5' ? 'eliminado' : null}"
+                          filterMatchMode="exact">
+                    <f:facet name="filter">
+                        <p:calendar  pattern="dd/MM/yyyy" locale="es" navigator="true">
+                            <p:ajax event="dateSelect"  oncomplete="PF('solicitudTable').filter()"/>
+                        </p:calendar>
+                    </f:facet>
+                    <h:outputText value="#{solicitud.fechaSolicitud}"
+                                  title="Fecha Fin">
+                        <f:convertDateTime pattern="dd/MM/yyyy" locale="es"/>  
+                    </h:outputText>
+                </p:column>
+                <p:column headerText="Fecha Final Solicitud" 
+                          styleClass="#{solicitud.idEstado eq '1' ? 'gestion' : null or solicitud.idEstado eq '2' ? 'aprobado' : null or solicitud.idEstado eq '3' ? 'rechazado' : null or solicitud.idEstado eq '5' ? 'eliminado' : null}">
+                    <h:outputText value="#{solicitud.fechaSolicitudFinal}"
+                                  style="text-transform: capitalize">
+                        <f:convertDateTime pattern="dd/MM/yyyy" locale="es"/>  
+                    </h:outputText>
+                </p:column>
+
+                <p:column filterBy="#{solicitud.nombreTipo}" 
+                          headerText="Tipo"
+                          styleClass="#{solicitud.idEstado eq '1' ? 'gestion' : null or solicitud.idEstado eq '2' ? 'aprobado' : null or solicitud.idEstado eq '3' ? 'rechazado' : null or solicitud.idEstado eq '5' ? 'eliminado' : null}"
+                          filterMatchMode="contains">
+                    <h:outputText value="#{solicitud.nombreTipo}" />
+                </p:column>
+
+                <p:column filterBy="#{solicitud.nombreMotivo}"
+                          headerText="Motivo" 
+                          styleClass="#{solicitud.idEstado eq '1' ? 'gestion' : null or solicitud.idEstado eq '2' ? 'aprobado' : null or solicitud.idEstado eq '3' ? 'rechazado' : null or solicitud.idEstado eq '5' ? 'eliminado' : null}"
+                          filterMatchMode="contains">
+                    <h:outputText value="#{solicitud.nombreMotivo}" />
+                </p:column>
+
+                <p:column filterBy="#{solicitud.nombrePatioInicio}" 
+                          headerText="P Inicio" 
+                          priority="3"
+                          styleClass="#{solicitud.idEstado eq '1' ? 'gestion' : null or solicitud.idEstado eq '2' ? 'aprobado' : null or solicitud.idEstado eq '3' ? 'rechazado' : null or solicitud.idEstado eq '5' ? 'eliminado' : null}"
+                          visible="false"
+                          filterMatchMode="contains">
+                    <p:cellEditor disabled="#{solicitud.idEstado == 5}">
+                        <f:facet name="output">
+                            <h:outputText value="#{solicitud.nombrePatioInicio != null ? solicitud.nombrePatioInicio : '----'}">
+                                <f:convertDateTime pattern="HH:mm" />
+                            </h:outputText>
+                        </f:facet>
+                        <f:facet name="input">
+                            <h:selectOneMenu value="#{solicitud.puntoInicio}"
+                                             style="width:100%">
+                                <f:selectItem itemLabel=" " itemValue="" />
+                                <f:selectItems value="#{gestionarSolicitud.listPatios}" 
+                                               var="pi"
+                                               itemLabel="#{pi.nombre}" 
+                                               itemValue="#{pi.idsog_patios}" />
+                                <p:ajax event="change" listener="#{gestionarSolicitud.editPatioInicio(solicitud)}" />
+                            </h:selectOneMenu>
+                        </f:facet>
+
+                    </p:cellEditor>
+                </p:column>
+                <p:column filterBy="#{solicitud.nombrePatioFinal}" 
+                          headerText="P Final" 
+                          priority="2"
+                          visible="false"
+                          styleClass="#{solicitud.idEstado eq '1' ? 'gestion' : null or solicitud.idEstado eq '2' ? 'aprobado' : null or solicitud.idEstado eq '3' ? 'rechazado' : null or solicitud.idEstado eq '5' ? 'eliminado' : null}"
+                          filterMatchMode="contains">
+                    <p:cellEditor disabled="#{solicitud.idEstado == 5}">
+                        <f:facet name="output">
+                            <h:outputText value="#{solicitud.nombrePatioFinal != null ? solicitud.nombrePatioFinal : '----'}">
+                                <f:convertDateTime pattern="HH:mm" />
+                            </h:outputText>
+                        </f:facet>
+                        <f:facet name="input">
+                            <h:selectOneMenu value="#{solicitud.puntoFinal}"
+                                             style="width:100%">
+                                <f:selectItem itemLabel=" " itemValue="" />
+                                <f:selectItems value="#{gestionarSolicitud.listPatios}" 
+                                               var="pf"
+                                               itemLabel="#{pf.nombre}" 
+                                               itemValue="#{pf.idsog_patios}" />
+                                <p:ajax event="change" listener="#{gestionarSolicitud.editPatioFin(solicitud)}" />
+                            </h:selectOneMenu>
+                        </f:facet>
+
+                    </p:cellEditor>
+                </p:column>
+                <p:column headerText="H Inicio" 
+                          styleClass="#{solicitud.idEstado eq '1' ? 'gestion' : null or solicitud.idEstado eq '2' ? 'aprobado' : null or solicitud.idEstado eq '3' ? 'rechazado' : null or solicitud.idEstado eq '5' ? 'eliminado' : null}"
+                          priority="1">
+                    <h:outputText value="#{solicitud.horaInicio != null ? solicitud.horaInicio : '-- : --'}">
+                        <f:convertDateTime pattern="HH:mm" />
+                    </h:outputText>
+                </p:column>
+                <p:column headerText="H Final"
+                          styleClass="#{solicitud.idEstado eq '1' ? 'gestion' : null or solicitud.idEstado eq '2' ? 'aprobado' : null or solicitud.idEstado eq '3' ? 'rechazado' : null or solicitud.idEstado eq '5' ? 'eliminado' : null}"
+                          >
+                    <h:outputText value="#{solicitud.horaFinal.hours == 0 ? '26:00' : solicitud.horaFinal}">
+                        <f:convertDateTime pattern="HH:mm" />
+                    </h:outputText>
+                </p:column>
+
+                <p:column filterBy="#{solicitud.fechaCreacion}"
+                          headerText="Fecha Registro"
+                          styleClass="#{solicitud.idEstado eq '1' ? 'gestion' : null or solicitud.idEstado eq '2' ? 'aprobado' : null or solicitud.idEstado eq '3' ? 'rechazado' : null or solicitud.idEstado eq '5' ? 'eliminado' : null}"
+                          filterMatchMode="contains">
+                    <h:outputText value="#{solicitud.fechaCreacion}"
+                                  style="text-transform: capitalize">
+                        <f:convertDateTime pattern="d/MM/yyyy HH:mm" />
+                    </h:outputText>
+                </p:column>
+
+                <p:column filterBy="#{solicitud.nombreEstado}" 
+                          headerText="Respuesta"
+                          id="status"
+                          styleClass="#{solicitud.idEstado eq '1' ? 'gestion' : null or solicitud.idEstado eq '2' ? 'aprobado' : null or solicitud.idEstado eq '3' ? 'rechazado' : null or solicitud.idEstado eq '5' ? 'eliminado' : null}"
+                          sortBy="#{solicitud.nombreEstado}"
+                          filterMatchMode="contains">
+                    <p:cellEditor disabled="#{solicitud.idEstado == 5}">
+                        <f:facet name="output">
+                            <h:outputText value="#{solicitud.nombreEstado}" style="font-weight: bold;"/></f:facet>
+                        <f:facet name="input">
+                            <p:selectOneMenu value="#{solicitud.idEstado}">
+                                <f:selectItems value="#{gestionarSolicitud.listEstados}" var="status" itemLabel="#{status.nombre}" itemValue="#{status.id_estado}" />
+                                <p:ajax event="change" listener="#{gestionarSolicitud.editRespuestaUnico(solicitud)}" update="tbl principalForm"/>
+                            </p:selectOneMenu>
+                        </f:facet>
+                    </p:cellEditor>
+                </p:column>
+
+                <p:column headerText="Opciones" styleClass="#{solicitud.notificacion ? 'notificacion' : null}">
+                    <p:selectBooleanButton id="value2" value="#{solicitud.obligatorio}" onLabel="Es obligatorio " 
+                                           style="color: #fff"
+                                           offLabel="No es obligatorio " onIcon="fa fa-fw fa-check" offIcon="fa fa-fw fa-close" 
+                                           disabled="#{solicitud.idEstado == 5}">
+                        <p:ajax event="change" update="principalForm:tbl" listener="#{gestionarSolicitud.editObligatorio(solicitud)}" />
+                    </p:selectBooleanButton>
+                    <p:separator/>
+                    <p:commandButton icon="fa fa-fw fa-paperclip" 
+                                     disabled="#{solicitud.solicitarDocumentoAdjunto == true ? true : false || solicitud.idEstado == 5}"
+                                     value="Solicitar adjunto"
+                                     title="Solicitar documento adjunto."
+                                     update="formAttachedRequest"
+                                     actionListener="#{gestionarSolicitud.accionDialog(solicitud, 'dlg3')}"/>
+                    <p:separator/>
+                    <p:commandButton icon="fa fa-fw fa-copy" 
+                                     update="pnl10"
+                                     disabled="#{solicitud.idEstado == 5}"
+                                     value="Adjuntar archivos"
+                                     title="Adjuntar archivos"
+                                     actionListener="#{gestionarSolicitud.accionDialog(solicitud, 'dlg10')}"/>
+                    <p:separator/>
+                    <p:commandButton icon="fa fa-fw fa-wechat" 
+                                     title="Agregar respuesta al solicitante." 
+                                     value="Agregar respuesta"
+                                     update="formAnswers"
+                                     actionListener="#{gestionarSolicitud.accionDialog(solicitud, 'dlg4')}"/>
+                    <p:separator/>
+                    <p:commandButton icon="fa fa-fw fa-clipboard" 
+                                     update="pnl5"
+                                     value="Respuestas"
+                                     disabled="#{solicitud.idEstado == 5}"
+                                     title="Ver histórico de respuestas." 
+                                     actionListener="#{gestionarSolicitud.accionDialog(solicitud, 'dlg5')}"/>
+                    <p:separator/>
+                    <p:commandButton icon="fa fa-fw fa-history" 
+                                     update="pnl6"
+                                     value="Historico"
+                                     disabled="#{solicitud.idEstado == 5}"
+                                     title="Consultar histórico del operador." 
+                                     actionListener="#{gestionarSolicitud.accionDialog(solicitud, 'dlg6')}"/>
+
+                </p:column>
+
+                <p:column headerText="Operador">
+                    <center>    
+
+                        <h:outputText value="#{solicitud.nombreEmpleado} #{solicitud.apellidoEmpleado}" style="font-weight: bold;"/>
+                    </center>
+                </p:column>
+
+                <f:facet name="footer">
+                    Tienes un total de #{fn:length(gestionarSolicitud.listMaestro)} solicitudes.
+                </f:facet>
+            </p:dataTable>
+
+        </h:form>
+        <ui:include src="dialogs/createRequest.xhtml"/>
+        <ui:include src="dialogs/operatorHistory.xhtml"/>
+        <ui:include src="dialogs/answersRequest.xhtml"/>
+        <ui:include src="dialogs/attachedRequest.xhtml"/>
+        <ui:include src="dialogs/listAnswersRequest.xhtml"/>
+        <ui:include src="dialogs/exportXlsx.xhtml"/>
+        <ui:include src="dialogs/attachFile.xhtml"/>
+        <ui:include src="dialogs/downloadFile.xhtml"/>
+
+        <style type="text/css">
+            .gestion {
+                background-color:#f3ec91;
+                color: #000 !important;
+            }
+            .rechazado {
+                background-color:#f57a77;
+                color: #fff !important;
+            }
+            .aprobado {
+                background-color: #7ede6a;
+                color: #000 !important;
+            }
+            .eliminado {
+                background-color: #848484;
+                color: #fff !important;
+            }
+            .notificacion{
+                background: #5d98ca;
+                animation-name: parpadeo;
+                animation-duration: 1s;
+                animation-timing-function: linear;
+                animation-iteration-count: infinite;
+
+                -webkit-animation-name:parpadeo;
+                -webkit-animation-duration: 1s;
+                -webkit-animation-timing-function: linear;
+                -webkit-animation-iteration-count: infinite;
+            }
+            @keyframes parpadeo {  
+                0% { opacity: 1.0; }
+                50% { opacity: 0.0; }
+                100% { opacity: 1.0; }
+            }
+        </style>
+    </ui:define>
+</ui:composition>

@@ -1,0 +1,65 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Inicio de sesión - SOG</title>
+        <h:outputStylesheet name="main/css/main.css" />
+        <link rel="shortcut icon" type="image/png" href="#{request.contextPath}/resources/main/images/favicon.png" /> 
+    </h:head>
+
+
+    <div class="limiter">
+        <div class="container-login100" style="background-image: url('#{request.contextPath}/resources/main/images/bg-02.png');">
+            <div class="wrap-login100 p-l-55 p-r-55 p-t-65 p-b-54 fadeInDown">
+                <h:form id="loginSOG" class="login100-form fadeInDown">
+
+                    <center>
+                        <h:graphicImage name="main/images/Logo.png" width="auto" height="15%" />
+                    </center>
+                    <br/>
+                    <p:messages id="msgs" closable="true" showIcon="false" style="display: inline-block;"/>
+
+                    <div class="wrap-input100 validate-input m-b-23 fadeIn">
+                        <h:outputLabel for="usuario" value="Usuario:" styleClass="label-input100"/>
+                        <p:inputText id="username" styleClass="input100"
+                                     value="#{usersLoginView.username}"
+                                     required="true" 
+                                     label="usuario"
+                                     requiredMessage="✘ Se requiere Usuario"/>
+                    </div>
+
+                    <div class="wrap-input100 validate-input fadeIn"> 
+                        <h:outputLabel for="contraseña" value="Contraseña:" styleClass="label-input100"/>
+                        <p:password id="password" styleClass="input100" 
+                                    value="#{usersLoginView.password}" 
+                                    required="true"
+                                    label="contraseña"
+                                    requiredMessage="✘ Se requiere Contraseña"/>
+                    </div>
+                    <br/>
+                    <div class="container-login100-form-btn fadeIn">
+                        <div class="wrap-login100-form-btn">
+                            <div class="login100-form-bgbtn"></div>
+                            <p:commandButton value="Iniciar Sesión " update="loginSOG"
+                                             styleClass="login100-form-btn"
+                                             oncomplete="setTimeout(function() { $('[id$=msgs]').hide(1000); }, 15000);"
+                                             actionListener="#{usersLoginView.login}" />
+
+                        </div>
+                    </div>
+                    <br/>
+                    <center>
+                        <h:outputText value="Haz tus solicitudes desde tu smartphone ya disponible en:" style="color: #354044; font-size: 12px"/>
+
+                        <br/>
+                        <a href="https://play.google.com/store/apps/details?id=com.bogotamovil.sog">
+                            <h:graphicImage name="main/images/play_Store.svg" width="10%" height="10%" style="margin: 10px 10px 0 0"/>
+                        </a>
+
+                        <!--     <h:graphicImage name="main/images/appStore.svg" width="10%" height="10%" style="margin: 10px 0 0 10px;"/> -->
+                    </center>
+                </h:form>
+            </div>
+        </div>
+    </div>
+</html>

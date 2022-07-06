@@ -1,0 +1,56 @@
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+    <p:dialog id="dlg1"
+              widgetVar="dlg1"
+              modal="true"
+              header="Crear usuario"            
+              draggable="false"
+              responsive="true">
+        <h:form id="formCreateUser" >
+            <div class="ui-fluid">
+                <p:messages id="messages" showDetail="true" closable="true"/>
+
+                <h:panelGrid columns="3">
+                    <i class="fa fa-fw fa-child"/>
+                    <h:outputText value="Usuario:" 
+                                  style="font-weight: bold;" />
+                    <p:selectOneMenu value="#{Usuarios.objUsuario.empleadoId}" 
+                                     filter="true">
+                        <f:selectItem itemLabel="Seleccionar" 
+                                      itemValue="" />
+                        <f:selectItems value="#{gestionarSolicitud.listEmpleados}" 
+                                       var="varE" 
+                                       itemLabel="#{varE.nombres} #{varE.apellidos}" 
+                                       itemValue="#{varE.id_empleado}" /> 
+                    </p:selectOneMenu>
+
+                    <i class="fa fa-fw fa-key"/>
+                    <h:outputText value="Contraseña: " style="font-weight: bold;"/>
+                    <p:password value="#{Usuarios.objUsuario.password}" feedback="true" />  
+
+                    <i class="fa fa-fw fa-users"/>
+                    <h:outputText value="Rol:" 
+                                  style="font-weight: bold;" />
+                    <p:selectOneMenu value="#{Usuarios.objUsuario.rol}" 
+                                     filter="true">
+                        <f:selectItem itemLabel="Seleccionar" 
+                                      itemValue="" />
+                        <f:selectItems value="#{Usuarios.listMaestroRol}" 
+                                       var="varR" 
+                                       itemLabel="#{varR.nombre}" 
+                                       itemValue="#{varR.id_rol}" /> 
+                    </p:selectOneMenu>
+
+                </h:panelGrid>
+                <br/>
+                <p:commandButton
+                    value="Crear" 
+                    update="formCreateUser formUsers"
+                    icon="fa fa-fw fa-user-plus"
+                    action="#{Usuarios.createUserNew()}"/>
+            </div>
+        </h:form>
+    </p:dialog>
+</ui:composition>

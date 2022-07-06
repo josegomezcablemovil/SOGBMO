@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8" ?> 
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mapper.sog_solicitudes">
+    <select id="selectSolicitudes" parameterType="org.sog.persistence.entities.EBSolicitudes"
+            resultType="org.sog.persistence.entities.EBSolicitudes">
+        SELECT s.*,
+        t.nombre AS nombreTipo,
+        m.nombre AS nombreMotivo,
+        e.nombre AS nombreEstado,
+        em.nombres AS nombreEmpleado,
+        em.apellidos AS apellidoEmpleado,
+        em.codigoTM AS codigoTM,
+        pi.nombre AS nombrePatioInicio,
+        pf.nombre AS nombrePatioFinal,
+        pa.nombre AS nombrePatioAlterno
+        FROM sog_solicitud s
+        INNER JOIN sog_tiposolicitud t ON s.idTipoSolicitud = t.id_tipo
+        INNER JOIN sog_motivosolicitud m ON s.idMotivoSolicitud = m.id_motivo
+        INNER JOIN sog_estado e ON s.idEstado = e.id_estado
+        INNER JOIN sog_empleado em ON s.idOperador = em.id_empleado
+        LEFT JOIN sog_patios pi ON s.puntoInicio = pi.idsog_patios
+        LEFT JOIN sog_patios pf ON s.puntofin = pf.idsog_patios
+        LEFT JOIN sog_patios pa ON s.puntoAlterno = pa.idsog_patios
+        <where>
+            <if test="idOperador != 0">
+                AND s.idOperador = #{idOperador}
+            </if>
+            <if test="idEstado != 0  and idEstado != 5 and idEstado != 6">
+                AND s.idEstado = #{idEstado}
+            </if>
+            <if test="idEstado == 5">
+                AND s.idEstado IN (1, 4)
+            </if>		
+            <if test="idEstado == 6">
+                AND s.idEstado IN (1, 2)
+            </if>			 
+            <if test="fechaSolicitudIniString != null and fechaSolicitudFinString != null">
+                AND s.fechaSolicitud BETWEEN #{fechaSolicitudIniString} AND #{fechaSolicitudFinString}
+            </if>
+            AND YEAR(fechaCreacion) >= #{ano}
+        </where>
+        ORDER BY s.id_solicitud DESC
+        <if test="limit == true">
+            LIMIT 4
+        </if>
+    </select>
+    
+    <select id="selectNotitificaciones" parameterType="org.sog.persistence.entities.EBRespuesta"
+            resultType="org.sog.persistence.entities.EBRespuesta">
+        SELECT * FROM sog_bmo.sog_respuesta r
+        WHERE r.esRespuestaOperador = 1
+        AND r.visto = 0
+    </select>
+    
+    
+    <select id="selectControlSolicitudes" parameterType="org.sog.persistence.entities.EBSolicitudes"
+            resultType="org.sog.persistence.entities.EBSolicitudes">
+        SELECT * FROM sog_solicitud 
+        WHERE fechaSolicitud = #{fechaSolicitud}
+        AND idOperador = #{idOperador}
+        AND idEstado != 5
+    </select>
+	
+    <insert id="createSolicitudes" useGeneratedKeys="true" keyProperty="id_solicitud" keyColumn="id_solicitud"
+            parameterType="org.sog.persistence.entities.EBSolicitudes">
+        insert into sog_solicitud
+        (id_solicitud,guid, idEstado, fechaCreacion, fechaModificacion,
+        horaInicio, horaFinal, fechaSolicitud, fechaSolicitudFinal,
+        idOperador, idUsuarioCreacion, idUsuarioModificacion, idMotivoSolicitud, 
+        idTipoSolicitud, observaciones, solicitarDocumentoAdjunto, esSolicitudSistema,
+        prioridad, puntoInicio, puntoFin, puntoAlterno, obligatorio, romperZona, defaultZona, exportadoFreeway)
+        values
+        (#{id_solicitud},#{guid},#{idEstado},#{fechaCreacion}, #{fechaModificacion},
+        #{horaInicio}, #{horaFinal}, #{fechaSolicitud}, #{fechaSolicitudFinal},
+        #{idOperador}, #{idUsuarioCreacion}, #{idUsuarioModificacion}, #{idMotivoSolicitud},
+        #{idTipoSolicitud}, #{observaciones}, #{solicitarDocumentoAdjunto}, #{esSolicitudSistema},
+        #{prioridad}, #{puntoInicio}, #{puntoFinal}, #{puntoAlterno}, #{obligatorio}, #{romperZona}, #{defaultZona}, #{exportadoFreeway})
+    </insert>
+    
+    <update id="editGuidsolicitud" parameterType="org.sog.persistence.entities.EBSolicitudes"> 
+        UPDATE sog_solicitud SET 
+        guid = #{guid}
+        WHERE id_solicitud= #{id_solicitud}  
+    </update> 
+    
+    <update id="editAdjuntoSolicitud" parameterType="org.sog.persistence.entities.EBSolicitudes">
+        UPDATE sog_solicitud SET 
+        solicitarDocumentoAdjunto = #{solicitarDocumentoAdjunto}
+        WHERE id_solicitud= #{id_solicitud}  
+    </update>
+    
+    <update id="editRespuestaSolicitud" parameterType="org.sog.persistence.entities.EBSolicitudes">
+        UPDATE sog_solicitud SET 
+        idEstado = #{idEstado}, 
+        fechaModificacion = #{fechaModificacion},
+        idUsuarioModificacion = #{idUsuarioModificacion},
+        mostrar = #{mostrar}
+        WHERE id_solicitud= #{id_solicitud}  
+    </update>
+    
+    <update id="editObligatorioSolicitud" parameterType="org.sog.persistence.entities.EBSolicitudes">
+        UPDATE sog_solicitud SET 
+        obligatorio = #{obligatorio}
+        WHERE id_solicitud= #{id_solicitud}  
+    </update>
+    
+    <update id="editPatioInicioSolicitud" parameterType="org.sog.persistence.entities.EBSolicitudes">
+        UPDATE sog_solicitud SET 
+        puntoInicio = #{puntoInicio}
+        WHERE id_solicitud= #{id_solicitud}  
+    </update>
+    
+    <update id="editPatioFinSolicitud" parameterType="org.sog.persistence.entities.EBSolicitudes">
+        UPDATE sog_solicitud SET 
+        puntoFin = #{puntoFinal}
+        WHERE id_solicitud= #{id_solicitud}   
+    </update>
+</mapper>

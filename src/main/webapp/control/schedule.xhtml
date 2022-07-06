@@ -1,0 +1,77 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://java.sun.com/jsf/core"
+                template="/WEB-INF/template.xhtml">
+
+
+
+    <ui:define name="implementation">
+        <h:form id="formRestricciones">
+            <div class="row">
+                <p:growl id="messages" showDetail="true"/>
+                <p:schedule id="schedule" value="#{scheduleMB.eventModel}" widgetVar="myschedule" timeZone="GMT+2" locale="es">
+
+                    <p:ajax event="dateSelect" listener="#{scheduleMB.onDateSelect}" update="eventDetails"
+                            oncomplete="PF('eventDialog').show();"/>
+                    <p:ajax event="eventSelect" listener="#{scheduleMB.onEventSelect}" update="eventDetails"
+                            oncomplete="PF('eventDialog').show();"/>
+                    <p:ajax event="eventMove" listener="#{scheduleMB.onEventMove}" update="messages"/>
+                    <p:ajax event="eventMove" listener="#{scheduleMB.onEventMove}" update="messages"/>
+                    <p:ajax event="eventResize" listener="#{scheduleMB.onEventResize}" update="messages"/>
+
+                </p:schedule>
+
+                <p:dialog
+                    header="Detalles del evento"
+                    widgetVar="eventDialog" 
+                    modal="true"
+                    draggable="false"
+                    responsive="true">
+                    <p:panelGrid id="eventDetails" columns="2" layout="grid" styleClass="ui-fluid">
+                        <p:outputLabel for="title" value="Titulo:"/>
+                        <p:inputText id="title" value="#{scheduleMB.event.title}" required="true" disabled="#{scheduleMB.event.title != ''}"/>
+
+                        <p:outputLabel for="from" value="Desde:"/>
+                        <p:calendar id="from" value="#{scheduleMB.event.startDate}" timeZone="GMT+2"
+                                    pattern="dd/MM/yyyy HH:mm" locale="es"/>
+
+                        <p:outputLabel for="to" value="Hasta:"/>
+                        <p:calendar id="to" value="#{scheduleMB.event.endDate}" timeZone="GMT+2"
+                                    pattern="dd/MM/yyyy HH:mm" locale="es"/>
+                        <p:outputLabel for="description" value="Descripción:" />
+                        <p:inputTextarea id="description" rows="5" cols="50" value="#{scheduleMB.event.description}" maxlength="200" minQueryLength="4"/>
+                        <br/>
+                    </p:panelGrid>
+                    <f:facet name="footer">
+                        <div class="pull-left" style="padding: 5px">
+                            <p:commandButton id="addButton" value="Guardar" styleClass="btn-primary"
+                                             icon="fa fa-fw fa-save "
+                                             update="formRestricciones"
+                                             actionListener="#{scheduleMB.addEvent}"/>
+                            <p:commandButton id="deleteButton" value="Eliminar" styleClass="btn-primary"
+                                             icon="fa fa-fw fa-trash"
+                                             update="formRestricciones"
+                                             actionListener="#{scheduleMB.deleteRestriccion}"
+                                             oncomplete="PF('myschedule').update();PF('eventDialog').hide();"/>
+                        </div>
+                    </f:facet>
+                </p:dialog>
+            </div>
+        </h:form> 
+
+        <style type="text/css">
+            .calendarRojo, .calendarButton .fc-event-skin, .calendarButton a {
+                background-color: red;
+                border-color: gray;
+            }
+
+            .calendarVerde, .calendarButton .fc-event-skin, .calendarButton a {
+                background-color: green;
+                border-color: gray;
+            }
+        </style>
+    </ui:define>
+
+</ui:composition>

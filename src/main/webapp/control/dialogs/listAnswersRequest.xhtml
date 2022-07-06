@@ -1,0 +1,54 @@
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+    <p:dialog widgetVar="dlg5"
+              resizable="false"
+              modal="true"
+              width="50%"
+              closable="false" style="margin: 20px auto 0 auto;">
+        <p:panel id="pnl5">
+
+            <center>
+                <h:outputText value="Listado de respuestas" 
+                              style="font-size: 20px; font-weight: bold; "/>
+                <p:separator style="width:10%;" />
+                <p:dataTable style="margin-top: 20px;" 
+                             var="res" 
+                             id="tbl5"
+                             expandableRowGroups="true"
+                             emptyMessage="No se encuentran registros" 
+                             value="#{gestionarSolicitud.listRespuesta}">
+                    <p:column width="20%">
+                        <i class="#{res.esRespuestaOperador ? 'fa fa-user' : 'fa fa-user-secret'}"></i>
+                        <h:outputText value="#{res.esRespuestaOperador ? ' Operador' : ' Programador'}" style="font-weight: bold"/>
+                    </p:column>
+
+                    <p:column headerText="Fecha Respuesta" width="20%">
+                        <h:outputText value="#{res.fechaCreacion}" style="text-transform: capitalize">
+                            <f:convertDateTime pattern="d/MM/yyyy HH:mm" />
+                        </h:outputText> 
+                    </p:column>
+
+                    <p:column headerText="Respuesta">
+                        <h:outputText value="#{res.valor}" />
+                    </p:column>
+
+                    <p:column width="10%">
+                        <center>
+                            <p:selectBooleanButton onLabel=" " offLabel=" " onIcon="fa fa-check" offIcon="fa fa-times" value="#{res.visto}" disabled="#{res.visto}">
+                                <p:ajax event="change" update="principalForm tbl5" listener="#{gestionarSolicitud.editVisto(res)}" />
+                            </p:selectBooleanButton>
+                        </center>
+                    </p:column>
+
+                </p:dataTable>
+                <br/>
+                <p:commandButton icon="fa fa-fw fa-close"
+                                 update="principalForm"
+                                 value="Cancelar" actionListener="#{gestionarSolicitud.cerrarDialogo('dlg5')}"/>
+            </center>
+        </p:panel>
+
+    </p:dialog>
+</ui:composition>

@@ -1,0 +1,74 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <ui:define name="implementation">
+
+        <h:form>
+            <p:dataTable var="solicitud" value="#{solicitudOperador.listMaestro}"
+                         emptyMessage="No se encuentran registros">
+
+                <p:column filterBy="#{solicitud.guid}" headerText="Código de solicitud" filterMatchMode="contains">
+                    <h:outputText value="#{solicitud.guid}" />
+                </p:column>
+
+                <p:column headerText="Fecha Solicitud">
+                    <h:outputText value="#{solicitud.fechaSolicitud}">
+                        <f:convertDateTime pattern="dd/MMM/yyyy" />
+                    </h:outputText>
+                </p:column>
+
+                <p:column filterBy="#{solicitud.nombreTipo}" headerText="Tipo Solicitud" filterMatchMode="contains">
+                    <h:outputText value="#{solicitud.nombreTipo}" />
+                </p:column>
+
+                <p:column filterBy="#{solicitud.nombreMotivo}" headerText="Motivo" filterMatchMode="contains">
+                    <h:outputText value="#{solicitud.nombreMotivo}" />
+                </p:column>
+
+
+                <p:column filterBy="#{solicitud.nombrePatioInicio}" headerText="Patio Inicio" filterMatchMode="contains">
+                    <h:outputText value="#{solicitud.nombrePatioInicio}" />
+                </p:column>
+
+                <p:column filterBy="#{solicitud.nombrePatioFinal}" headerText="Patio Final" filterMatchMode="contains">
+                    <h:outputText value="#{solicitud.nombrePatioFinal}" />
+                </p:column>
+
+                <p:column headerText="Hora Inicio">
+                    <center>
+                        <h:outputText value="#{solicitud.horaInicio}">
+                            <f:convertDateTime pattern="HH:mm" />
+                        </h:outputText>
+                    </center>
+                </p:column>
+
+                <p:column headerText="Hora Final">
+                    <center>
+                        <h:outputText value="#{solicitud.horaFinal}">
+                            <f:convertDateTime pattern="HH:mm" />
+                        </h:outputText>
+                    </center>
+                </p:column>
+
+                <p:column headerText="Fecha Registro">
+                    <h:outputText value="#{solicitud.fechaCreacion}">
+                        <f:convertDateTime pattern="dd/MMM/yyyy HH:mm" />
+                    </h:outputText>
+                </p:column>
+
+                <p:column filterBy="#{solicitud.idEstado}" headerText="Estado" filterMatchMode="contains">
+                    <h:outputText value="#{solicitud.idEstado eq '1' ? 'Gestion' : null or solicitud.idEstado eq '2' ? 'Aprobado' : null or solicitud.idEstado eq '3' ? 'Rechazado' : null or solicitud.idEstado eq '4' ? 'Pendiente' : null}" />
+                </p:column>
+
+
+            </p:dataTable>
+        </h:form>
+
+    </ui:define>
+
+
+
+</ui:composition>

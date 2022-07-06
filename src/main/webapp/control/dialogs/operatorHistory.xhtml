@@ -1,0 +1,77 @@
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+    <p:dialog widgetVar="dlg6"
+              modal="true"
+              width="50%"
+              closable="false">
+        <h:form id="pnl6">
+
+            <center>
+                <h:outputText value="Historial de usuario"  
+                              style="font-size: 20px; font-weight: bold; margin-bottom: 20px;"/>
+                <p:separator style="width:10%;" />
+                <p:panelGrid columns="2" columnClasses="ui-g-12 ui-md-6,ui-g-12 ui-md-6"
+                             layout="grid" styleClass="ui-panelgrid-blank">
+                    <h:outputText value="CODIGO OPERADOR:"  style="font-size: 14px; font-weight: bold;"/>
+                    <h:outputText value="NOMBRE OPERADOR:"  style="font-size: 14px; font-weight: bold;"/>
+                </p:panelGrid>
+                <p:panelGrid columns="2" columnClasses="ui-g-12 ui-md-6,ui-g-12 ui-md-6"
+                             layout="grid" styleClass="ui-panelgrid-blank">
+                    <h:outputText value="#{gestionarSolicitud.objfindSolcitud.codigoTM}"  style="font-size: 12px;"/>
+                    <h:outputText value="#{gestionarSolicitud.objfindSolcitud.nombreEmpleado} #{gestionarSolicitud.objfindSolcitud.apellidoEmpleado}"  style="font-size: 12px;"/>      
+                </p:panelGrid>
+            </center>
+            <p:separator/>
+
+            <p:dataTable id="solciitudUser" var="find" value="#{gestionarSolicitud.listFindMaestro}" 
+                         widgetVar="solciitudUser"
+                         scrollRows="20" scrollable="true" liveScroll="true" scrollHeight="350"
+                         emptyMessage="No se encuentran registros">
+
+                <p:column filterMatchMode="contains" filterBy="#{find.nombreTipo}" headerText="Tipo Solicitud">
+                    <h:outputText value="#{find.nombreTipo}" />
+                </p:column>
+
+                <p:column filterMatchMode="contains" filterBy="#{find.nombreMotivo}" headerText="Motivo Solicitud">
+                    <h:outputText value="#{find.nombreMotivo}" />
+                </p:column>
+
+                <p:column headerText="Fecha Solicitud">
+                    <h:outputText value="#{find.fechaSolicitud}">
+                        <f:convertDateTime pattern="d/MMM/yyyy" />
+                    </h:outputText>
+                </p:column>
+
+                <p:column headerText="Fecha Creación">
+                    <h:outputText value="#{find.fechaCreacion}">
+                        <f:convertDateTime pattern="d/MMM/yyyy HH:mm" />
+                    </h:outputText>
+                </p:column>
+
+                <p:column filterMatchMode="contains" filterBy="#{find.nombreEstado}" headerText="Estado">
+                    <h:outputText value="#{find.nombreEstado}" />
+                </p:column>
+                <f:facet name="footer">
+                    <center>
+                        <h:commandLink>
+                            <p:graphicImage name="/demo/images/excelLogo.png" />
+                            <p:dataExporter type="xls" target="solciitudUser" fileName="Solicitudes #{gestionarSolicitud.objfindSolcitud.codigoTM}" pageOnly="true"/>
+                        </h:commandLink>
+                    </center>
+                </f:facet>
+            </p:dataTable>
+            <center>
+                <p:commandButton value="Cerrar"
+                                 icon="fa fa-fw fa-close"
+                                 update="principalForm"
+                                 actionListener="#{gestionarSolicitud.cerrarDialogo('dlg6')}"
+                                 style="margin-top: 20px; background-color: #bd2828; border: 1px solid #bd2828;" />
+
+            </center> 
+
+        </h:form>
+
+    </p:dialog>
+</ui:composition>

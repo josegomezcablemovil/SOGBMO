@@ -1,0 +1,44 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <ui:define name="implementation">
+
+        <h:form>
+            <p:dataTable var="operador" value="#{Operadores.listMaestroOperadores}"
+                         emptyMessage="No se encuentran registros">
+
+                <p:column filterBy="#{operador.nombres}" headerText="Nombre" filterMatchMode="contains">
+                    <h:outputText value="#{operador.nombres} #{operador.apellidos}" />
+                </p:column>
+
+                <p:column headerText="codigoTM">
+                    <h:outputText value="#{operador.codigoTM}"/>
+                </p:column>
+
+                <p:column filterBy="#{operador.tipoConductor}" headerText="Tipo Conductor" filterMatchMode="contains">
+                    <h:outputText value="#{operador.tipoConductor}" />
+                </p:column>
+
+                <p:column filterBy="#{operador.genero}" headerText="Genero" filterMatchMode="contains">
+                    <h:outputText value="#{operador.genero}" />
+                </p:column>
+
+
+                <p:column filterBy="#{operador.zona}" headerText="Zona" filterMatchMode="contains">
+                    <h:outputText value="#{operador.zona}" />
+                </p:column>
+
+                
+
+
+            </p:dataTable>
+        </h:form>
+
+    </ui:define>
+
+
+
+</ui:composition>

@@ -1,0 +1,38 @@
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+    <p:dialog widgetVar="dlg4"
+              modal="true" 
+              closable="false">
+        <h:form id="formAnswers">
+            <center>
+
+                <h:outputText value="Agregar Respuesta" 
+                              style="font-size: 20px; font-weight: bold; "/>
+                <p:separator style="width:10%;" />
+                <p:messages id="msgsAnswers" closable="true" showIcon="false" style="display: inline-block;"/>
+                <br/>
+                <p:inputTextarea rows="10" cols="50"
+                                 requiredMessage="✘ Se requiere respuesta"
+                                 required="true"
+                                 value="#{gestionarSolicitud.objRespueta.valor}" counter="display" maxlength="500" counterTemplate="{0} caracteres restantes."/>
+                <br/>
+                <h:outputText id="display" />
+                <br/>
+                <p:commandButton style="margin-top:20px" 
+                                 icon="fa fa-fw fa-check"
+                                 process="formAnswers"
+                                 oncomplete="setTimeout(function() { $('[id$=msgsAnswers]').hide(1000); }, 15000);"
+                                 update="principalForm formAnswers"
+                                 actionListener="#{gestionarSolicitud.enviarRespuesta()}"
+                                 value="Crear"/>
+                 <p:commandButton value="Cancelar"
+                                 icon="fa fa-fw fa-close"
+                                 immediate="true"
+                                 actionListener="#{gestionarSolicitud.cerrarDialogo('dlg4')}"
+                                 style="margin: 20px 0 20px 0; background-color: #bd2828; border: 1px solid #bd2828;" />
+            </center>
+        </h:form>
+    </p:dialog>
+</ui:composition>

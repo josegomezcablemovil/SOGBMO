@@ -1,0 +1,52 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+    <ui:define name="implementation">
+
+        <h:form>
+
+            <p:toolbar>
+                <f:facet name="left">
+                    <p:commandButton value="Crear" 
+                                     disabled="true"
+                                     onclick="PF('dlg1').show();" 
+                                     icon="fa fa-fw fa-plus"/>
+                    <p:commandButton value="Editar" disabled="true" icon="fa fa-fw fa-pencil-square-o" />
+                    <p:commandButton value="Reglas" disabled="true" icon="fa fa-fw fa-list-alt" />
+                </f:facet>
+
+            </p:toolbar>
+            <p:dataTable id="listMaestro" 
+                         var="tipo" value="#{TipoSolicitud.listMaestro}" 
+                         emptyMessage="No se encuentran registros">
+
+                <p:column filterBy="#{tipo.id_tipo}" headerText="ID" filterMatchMode="contains" style="width:10%">
+                    <h:outputText value="#{tipo.id_tipo}" />
+                </p:column>
+
+                <p:column filterBy="#{tipo.nombre}" headerText="Tipo Solicitud" filterMatchMode="contains">
+                    <h:outputText value="#{tipo.nombre}" />
+                </p:column>
+
+                <p:column filterBy="#{tipo.descripcion}" headerText="Descripción  " filterMatchMode="contains">
+                    <h:outputText value="#{tipo.descripcion}" />
+                </p:column>
+
+                <p:column filterBy="#{tipo.estado}" headerText="Estado" filterMatchMode="contains" style="width:10%">
+                    <h:outputText value="#{tipo.estado eq '0' ? 'Inactivo' : 'Activo'}" />
+                </p:column>
+
+
+
+            </p:dataTable>
+        </h:form>
+
+
+    </ui:define>
+
+
+
+</ui:composition>

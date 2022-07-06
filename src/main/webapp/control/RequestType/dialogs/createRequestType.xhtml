@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+    <h:form id="formCreateTypeRequest">
+        <ui:composition>
+            <h:panelGrid columns="3">
+                <i class="fa fa-fw fa-pencil"/>
+          
+                <h:outputText value="Nombre:" 
+                              style="font-weight: bold;"/>
+                <p:inputText/>
+            </h:panelGrid>
+            <p:separator/>
+            <h:panelGrid columns="3">
+                <i class="fa fa-fw fa-comment"/>
+                <h:outputText value="Descripción:" 
+                              style="font-weight: bold;"/>
+                <p:inputTextarea rows="5" cols="30"/>
+            </h:panelGrid>
+            <br/>
+            <center>
+
+                <p:commandButton value="Crear"
+                                 icon="fa fa-fw fa-check"/>
+                <p:commandButton value="Cancelar"
+                                 icon="fa fa-fw fa-close"
+                                 style="margin-top: 20px; background-color: #bd2828; border: 1px solid #bd2828;" />
+            </center>
+        </ui:composition>
+    </h:form>
+</html>

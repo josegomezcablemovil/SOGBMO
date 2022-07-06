@@ -1,0 +1,145 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <ui:define name="implementation">
+
+        <h:form id="formUsers">
+            <p:toolbar>
+                <f:facet name="right">
+
+                    <p:commandButton value="Crear"
+                                     icon="fa fa-fw fa-plus"
+                                     action="#{Usuarios.createUser()}"/>
+                </f:facet>
+
+            </p:toolbar>
+            <p:dataTable var="user" value="#{Usuarios.listMaestroUsuario}" rows="10" paginator="true"
+                         emptyMessage="No se encuentran registros">
+
+                <p:column filterBy="#{user.idsog_admon_usuarios}" headerText="Id" filterMatchMode="contains" width="5%">
+                    <h:outputText value="#{user.idsog_admon_usuarios}"/>
+                </p:column>
+
+                <p:column filterBy="#{user.nombres}" headerText="Nombres" filterMatchMode="contains">
+                    <h:outputText value="#{user.nombres}" />
+                </p:column>
+
+                <p:column headerText="Ultimo ingreso">
+                    <h:outputText value="#{user.ultimoIngreso}">
+                        <f:convertDateTime pattern="dd MMM yyyy HH:mm:ss" />
+                    </h:outputText>
+                </p:column>
+
+                <p:column headerText="Estado">
+                    <center>
+                        <p:selectBooleanButton value="#{user.estado}" onLabel="" offLabel="" onIcon="fa fa-fw fa-check" offIcon="fa fa-fw fa-close">
+                            <p:ajax event="change" listener="#{Usuarios.editEstado(user)}" />
+                        </p:selectBooleanButton>
+                    </center>
+                </p:column>
+
+                <p:column headerText="Contraseña">
+                    <center>     
+
+                        <p:commandButton value="Cambiar"
+                                         icon="fa fa-fw fa-key"
+                                         action="#{Usuarios.changePassword(user)}"/>
+                    </center>
+                </p:column>
+
+            </p:dataTable>
+
+
+
+
+            <p:dataTable var="u" value="#{Usuarios.listMaestroUsuarioMovil}" rows="20" paginator="true"
+                         emptyMessage="No se encuentran registros">
+
+                <p:column filterBy="#{u.email}" headerText="Email" filterMatchMode="contains" width="5%">
+                    <h:outputText value="#{u.email}"/>
+                </p:column>
+
+                <p:column filterBy="#{u.nombres}" headerText="Nombres" filterMatchMode="contains">
+                    <h:outputText value="#{u.nombres}" />
+                </p:column>
+
+                <p:column headerText="Ultimo ingreso">
+                    <h:outputText value="#{u.ultimoIngreso}">
+                        <f:convertDateTime pattern="dd MMM yyyy HH:mm:ss" />
+                    </h:outputText>
+                </p:column>
+
+                <p:column headerText="Estado">
+                    <center>
+                        <p:selectBooleanButton value="#{u.estado}" onLabel="" offLabel="" onIcon="fa fa-fw fa-check" offIcon="fa fa-fw fa-close">
+                            <p:ajax event="change" listener="#{Usuarios.editEstado(u)}" />
+                        </p:selectBooleanButton>
+                    </center>
+                </p:column>
+
+                <p:column headerText="Contraseña">
+                    <center>     
+
+                        <p:commandButton value="Cambiar"
+                                         icon="fa fa-fw fa-key"
+                                         action="#{Usuarios.changePassword(u)}"/>
+                    </center>
+                </p:column>
+
+            </p:dataTable>
+
+
+        </h:form>
+
+        <br/>
+        <p:panelGrid columns="2" columnClasses="ui-g-12 ui-md-6,ui-g-12 ui-md-6" layout="grid">
+            <p:outputLabel value="Usuarios inactivos:  " style="font-weight: bold"/>
+            <p:outputLabel value="Roles:   " style="font-weight: bold"/>
+            <p:dataTable var="userI" value="#{Usuarios.listMaestroUsuarioInactive}"
+                         emptyMessage="No se encuentran registros">
+
+                <p:column filterBy="#{userI.idsog_admon_usuarios}" headerText="Id" filterMatchMode="contains" width="10%">
+                    <h:outputText value="#{userI.idsog_admon_usuarios}"/>
+                </p:column>
+
+                <p:column filterBy="#{userI.nombres}" headerText="Nombres" filterMatchMode="contains">
+                    <h:outputText value="#{userI.nombres}" />
+                </p:column>
+
+                <p:column headerText="Ultimo ingreso" width="20%">
+                    <h:outputText value="#{userI.ultimoIngreso}">
+                        <f:convertDateTime pattern="dd MMM yyyy HH:mm:ss" />
+                    </h:outputText>
+                </p:column>
+
+                <p:column filterBy="#{userI.estado}" headerText="Estado" filterMatchMode="contains" width="10%">
+                    <h:outputText value="#{userI.estado == true ? 'Activo ' : 'Inactivo '}" />
+                </p:column>
+
+            </p:dataTable>
+
+            <p:dataTable var="rol" value="#{Usuarios.listMaestroRol}"
+                         emptyMessage="No se encuentran registros">
+
+                <p:column filterBy="#{rol.id_rol}" headerText="Id" filterMatchMode="contains" width="10%">
+                    <h:outputText value="#{rol.id_rol}"/>
+                </p:column>
+
+                <p:column filterBy="#{rol.nombre}" headerText="Nombres" filterMatchMode="contains">
+                    <h:outputText value="#{rol.nombre}" />
+                </p:column>
+
+            </p:dataTable>
+        </p:panelGrid>
+
+        <ui:include src="dialog/createUser.xhtml"/>
+        <ui:include src="dialog/changePassword.xhtml"/>
+
+    </ui:define>
+
+
+
+</ui:composition>

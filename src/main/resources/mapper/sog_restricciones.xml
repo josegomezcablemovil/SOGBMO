@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?> 
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mapper.sog_restricciones">
+    <select id="selectRestricciones" parameterType="org.sog.persistence.entities.EBRestricciones"
+            resultType="org.sog.persistence.entities.EBRestricciones">
+        SELECT * FROM sog_restricciones WHERE eliminado = 0;
+    </select>
+    
+    
+    <update id="editRestricciones" parameterType="org.sog.persistence.entities.EBRestricciones"> 
+        UPDATE sog_restricciones SET 
+        descripcion = #{descripcion},
+        fecha_desde = #{fecha_desde},
+        fecha_hasta = #{fecha_hasta},
+        usuario_edicion = #{usuario_edicion},
+        fecha_edicion = #{fecha_edicion},
+        editable = #{editable},
+        styleClass = #{styleClass}
+        WHERE titulo = #{titulo}  
+    </update> 
+    
+    <update id="editRestriccionesUrl" parameterType="org.sog.persistence.entities.EBRestricciones">
+        UPDATE sog_restricciones SET 
+        titulo = #{titulo}
+        WHERE id_restriccion= #{id_restriccion}  
+    </update>
+
+    <update id="deleteRestriccion" parameterType="org.sog.persistence.entities.EBRestricciones">
+        UPDATE sog_restricciones SET 
+        eliminado = 1,
+        usuario_edicion = #{usuario_edicion},
+        fecha_edicion = #{fecha_edicion}
+        WHERE titulo = #{titulo} 
+    </update>
+           
+    <insert id="createRestricciones" useGeneratedKeys="true" keyProperty="id_restriccion" keyColumn="id_restriccion"
+            parameterType="org.sog.persistence.entities.EBRestricciones">
+        insert into sog_restricciones
+        (id_restriccion, titulo, descripcion, fecha_desde, fecha_hasta, editable, url, styleClass, usuario_creacion, fecha_creacion)
+        values
+        (#{id_restriccion},#{titulo},#{descripcion},#{fecha_desde}, #{fecha_hasta}, #{editable}, #{url}, #{styleClass}, #{usuario_creacion}, #{fecha_creacion})
+    </insert>
+</mapper>

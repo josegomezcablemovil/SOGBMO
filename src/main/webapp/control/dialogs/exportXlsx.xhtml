@@ -1,0 +1,94 @@
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+    <p:dialog widgetVar="dlg7"
+              modal="true" 
+              width="90%"
+              closable="false">
+        <h:form id="pnl7">
+            <center>
+
+                <h:outputText value="Reporte Freeway" 
+                              style="font-size: 20px; font-weight: bold; "/>
+                <p:separator style="width:10%;" />
+
+                <p:outputLabel value="Fecha Inicial :" />
+                <p:calendar locale="es" navigator="true" pattern="yyyy-MMM-dd" value="#{gestionarSolicitud.startDate}" />
+
+                <p:outputLabel value="Fecha Final:" />
+                <p:calendar  locale="es" navigator="true" pattern="yyyy-MMM-dd" value="#{gestionarSolicitud.endDate}"/>
+                <p:commandButton style="background-color: #bd2828; border: 1px solid #bd2828;" 
+                                 icon="fa fa-fw fa-search"
+                                 update="pnl7"
+                                 value="Buscar" actionListener="#{gestionarSolicitud.findReport()}"/>
+
+                <p:dataTable style="margin-top: 20px;" 
+                             var="res" 
+                             id="exportFreeway"
+                             widgetVar="exportFreeway"
+                             expandableRowGroups="true"
+                             scrollable="true" scrollHeight="200"
+                             emptyMessage="No se encuentran registros" 
+                             value="#{gestionarSolicitud.listReportMaestro}">
+                    <p:column headerText="DriverCode">
+                        <h:outputText value="#{res.codigoTM}" />
+                    </p:column>
+
+                    <p:column headerText="Date">
+                        <h:outputText value="#{res.fechaSolicitud}" style="text-transform: capitalize">
+                            <f:convertDateTime pattern="yyyy-MM-dd" />
+                        </h:outputText>
+
+                    </p:column>
+
+                    <p:column headerText="DriverNoveltyType">
+                        <h:outputText value="#{res.nombreTipo}" />
+                    </p:column>
+
+                    <p:column headerText="IsMandatory">
+                        <h:outputText value="#{res.obligatorio == true ? 1 : 0}"/>
+                    </p:column>
+
+                    <p:column headerText="FromStopPoint">
+                        <h:outputText value="#{res.nombrePatioInicio}" />
+                    </p:column>
+
+                    <p:column headerText="ToStopPoint">
+                        <h:outputText value="#{res.nombrePatioFinal}"/>
+                    </p:column>
+
+                    <p:column headerText="StartTime">
+                        <h:outputText value="#{res.horaInicio}" >
+                            <f:convertDateTime pattern="HH:mm" />
+                        </h:outputText>
+                    </p:column>
+
+                    <p:column headerText="EndTime">
+                        <h:outputText value="#{res.horaFinal.hours == 0 ? '26:00' : res.horaFinal}" >
+                            <f:convertDateTime pattern="HH:mm" />
+                        </h:outputText>
+                    </p:column>
+
+                    <p:column headerText="Description">
+                        <h:outputText value="#{res.observaciones} 'Codigo Solicitud: ' #{res.guid}" />
+                    </p:column>
+                    <f:facet name="footer">
+                        <center>
+                            <h:commandLink>
+                                <p:graphicImage name="/demo/images/excelLogo.png" />
+                                <p:dataExporter type="xls" target="exportFreeway" fileName="Novedad conductor" pageOnly="true"/>
+                            </h:commandLink>
+                        </center>
+                    </f:facet>
+
+                </p:dataTable>
+                <br/>
+                <p:commandButton style="background-color: #bd2828; border: 1px solid #bd2828;" 
+                                 icon="fa fa-fw fa-close"
+                                 update="principalForm"
+                                 value="Cancelar" actionListener="#{gestionarSolicitud.cerrarDialogo('dlg7')}"/>
+            </center> 
+        </h:form>
+    </p:dialog>
+</ui:composition>

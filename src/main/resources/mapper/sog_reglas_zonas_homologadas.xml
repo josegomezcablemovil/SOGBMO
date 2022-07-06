@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?> 
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mapper.sog_reglas_zonas_homologadas">
+    <select id="selectZonaHomologada" parameterType="int"
+            resultType="org.sog.persistence.entities.EBReglaZonaHomologada">
+        SELECT z.*, 
+        pa.nombre AS patioAlternoNombre,
+        p.nombre AS patioNombre FROM sog_reglas_zonas_homologadas z
+        LEFT JOIN sog_patios p ON z.PatioId = p.idsog_patios
+        LEFT JOIN sog_patios pa ON z.PatioAlternoId = pa.idsog_patios
+        WHERE z.id_reglasZonas = #{id_reglasZonas}
+    </select>
+</mapper>

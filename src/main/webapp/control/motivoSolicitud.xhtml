@@ -1,0 +1,54 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+    <ui:define name="implementation">
+
+        <h:form>
+
+            <p:toolbar>
+                <f:facet name="left">
+                    <p:commandButton value="Crear" type="button" onclick="PF('dlg2').show();"  disabled="true"/>
+                    <p:separator/>
+                    <p:commandButton type="button" value="Editar" icon="pi pi-file" disabled="true"/>
+                </f:facet>
+
+            </p:toolbar>
+            <p:dataTable id="listMaestro" var="motivo" value="#{motivoSolicitud.listMaestro}" 
+                         emptyMessage="No se encuentran registros">
+
+
+                <p:column filterBy="#{motivo.nombre}" headerText="Motivo Solicitud" filterMatchMode="contains">
+                    <h:outputText value="#{motivo.nombre}" />
+                </p:column>
+
+
+                <p:column filterBy="#{motivo.prioridad}" headerText="Prioridad" filterMatchMode="contains" width="10%">
+                    <h:outputText value="#{motivo.prioridad}" />
+                </p:column>
+
+                <p:column filterBy="#{motivo.estado}" headerText="Estado" filterMatchMode="contains" width="10%">
+                    <h:outputText value="#{motivo.estado eq '0' ? 'Inactivo' : 'Activo'}" />
+                </p:column>
+
+
+            </p:dataTable>
+            <p:contextMenu for="listMaestro">
+                <p:menuitem value="Save"/>
+                <p:menuitem value="Update"/>
+                <p:menuitem value="Delete"/>
+                <p:menuitem value="Homepage"/>
+            </p:contextMenu>
+        </h:form>
+
+        <p:dialog header="Crear tipo de solicitud" widgetVar="dlg2" modal="true" height="100">
+            <h:outputText value="This is a Modal Dialog." />
+        </p:dialog>
+
+    </ui:define>
+
+
+
+</ui:composition>

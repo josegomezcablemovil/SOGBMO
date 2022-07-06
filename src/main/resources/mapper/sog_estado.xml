@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?> 
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mapper.sog_estado">
+    <resultMap id="sog_estado" type="org.sog.persistence.entities.EBEstado">
+        <result property="id" column="id" />
+        <result property="nombre" column="nombre" />
+    </resultMap>
+    
+    <select id="selectEstadoSolicitud" parameterType="org.sog.persistence.entities.EBEstado"
+            resultType="org.sog.persistence.entities.EBEstado">
+        SELECT * FROM sog_estado ORDER BY id_estado DESC;
+    </select>
+</mapper>

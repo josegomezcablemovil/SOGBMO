@@ -1,0 +1,62 @@
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+    <p:dialog widgetVar="dlg10"
+              modal="true"
+              width="50%"
+              closable="false" style="margin: 20px auto 0 auto;">
+        <h:form id="pnl10" enctype="multipart/form-data">
+
+            <center>
+                <h:outputText value="Archivos adjuntos" 
+                              style="font-size: 20px; font-weight: bold; "/>
+                <p:separator style="width:10%;" />
+
+                <p:fileUpload value="#{gestionarSolicitud.file}" mode="advanced" multiple="false"
+                              update="pnl10 pnl10:downloadFile"
+                              uploadLabel="Cargar"  cancelLabel="Cancelar" label="Agregar"
+                              fileUploadListener="#{gestionarSolicitud.fileUploadListener}">
+                </p:fileUpload>
+
+                <p:dataTable style="margin-top: 20px;" 
+                             var="adj" 
+                             id="downloadFile"
+                             widgetVar="downloadFile"
+                             expandableRowGroups="true"
+                             emptyMessage="No se encuentran registros" 
+                             value="#{gestionarSolicitud.listAdjuntos}">
+                    <p:column headerText="Nombre">
+                        <h:outputText value="#{adj.nombre}" />
+                    </p:column>
+                    <p:column headerText="Tamaño">
+                        <h:outputText value="#{adj.tamano}" />
+                    </p:column>
+                    <p:column headerText="Extensión">
+                        <h:outputText value="#{adj.extension}" />
+                    </p:column>
+                    <p:column headerText="Descripción">
+                        <h:outputText value="#{adj.descrpcion}" />
+                    </p:column>
+                    <p:column headerText="Fecha Adjunto">
+                        <h:outputText value="#{adj.fechaCreacion}" >
+                            <f:convertDateTime pattern="yyyy-MM-dd hh:mm"/>
+                        </h:outputText>
+                    </p:column>
+                    <p:column headerText="Descargar">
+
+                        <p:commandButton id="downloadLink" value="Descargar" icon="fa fa-download" ajax="false" actionListener="#{gestionarSolicitud.downloadFile(adj, adj.id_adjunto)}">
+                            <p:fileDownload value="#{gestionarSolicitud.fileDownload}" />
+                        </p:commandButton>
+
+                    </p:column>
+                </p:dataTable>
+                <br/>
+                <p:commandButton style="background-color: #bd2828; border: 1px solid #bd2828;" 
+                                 icon="fa fa-fw fa-close"
+                                 update="principalForm"
+                                 value="Cancelar" actionListener="#{gestionarSolicitud.cerrarDialogo('dlg10')}"/>
+            </center>
+        </h:form>
+    </p:dialog>
+</ui:composition>
