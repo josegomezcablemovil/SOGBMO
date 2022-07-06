@@ -799,7 +799,7 @@ public class GestionarSolicitud {
         try {
             ConectorFileServer cfs = new ConectorFileServerImpl(CanalFileServerEnum.WEB);
             cfs.conectar();
-            if (cfs.subirArchivo(file.getInputstream(), cfs.getPath().concat(tempMaestro.getIdOperador() + "/" + tempMaestro.getGuid() + "/"), nameFile)) {
+             if (cfs.subirArchivo(file.getInputstream(), cfs.getPath().concat(tempMaestro.getIdOperador() + "/" + tempMaestro.getId_solicitud() + "/"), nameFile)) {
                 EBAdjunto objAdjunto = new EBAdjunto();
                 objAdjunto.setNombre(file.getFileName());
                 objAdjunto.setFechaCreacion(fechaActual = new Date());
